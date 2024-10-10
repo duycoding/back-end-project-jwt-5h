@@ -18,10 +18,40 @@ const createUserService = async (name, email, password) => {
     }
 }
 
+const loginService = async (email, password) => {
+    try {
+        // Hàm find trả về một array
+        // Hàm findOne trả về một phần tử
+        const user = await User.findOne({email: email})
+        console.log(">>> Check use: ", user)
+        if (user) {
+            const isMatchPassword = await bcrypt.compare(password, user.password)
+            if (!isMatchPassword) {
+                return {
+                    EC: 2, 
+                    EM: "Email/Passwod không hợp lệ"
+                }
+            } else {
+                // create access token
+                return "create access token"
+            }
+        } else {
+            return {
+                EC: 1,
+                EM: "Email/Password không hợp lệ"
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 
 
 
 
 module.exports = {
-    createUserService
+    createUserService,
+    loginService,
 }
